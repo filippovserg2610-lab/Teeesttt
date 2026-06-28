@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telegram Style UI</title>
+    <!-- Иконки (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ----- Глобальные переменные Telegram (светлая тема) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #e8edf0;  /* фон как у чатов Telegram */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 420px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 28px;       /* скругления как у карточек в Telegram */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            padding: 28px 24px 32px;
+            transition: 0.2s;
+        }
+
+        /* ----- Заголовок ----- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1c1c1e;
+            letter-spacing: -0.3px;
+        }
+
+        .header i {
+            font-size: 22px;
+            color: #5e5e5e;
+            cursor: default;
+        }
+
+        /* ----- Стили кнопок (точно как в Telegram) ----- */
+        .tg-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #f0f2f4;      /* фон кнопок как в ТГ */
+            border: none;
+            border-radius: 14px;       /* скругление как у кнопок в сообщениях */
+            padding: 12px 18px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1c1c1e;
+            transition: background 0.15s, transform 0.1s;
+            cursor: pointer;
+            width: 100%;
+            text-decoration: none;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.02); /* тонкая граница для объёма */
+        }
+
+        .tg-btn i {
+            font-size: 18px;
+            color: #4b4b4d;
+        }
+
+        .tg-btn:hover {
+            background: #e4e7ea;
+        }
+
+        .tg-btn:active {
+            background: #d7dadf;
+            transform: scale(0.97);
+        }
+
+        /* ----- Кнопка-акцент (синяя, как "Отправить" / "Голосовать") ----- */
+        .tg-btn-primary {
+            background: #2481cc;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(36, 129, 204, 0.25);
+        }
+
+        .tg-btn-primary i {
+            color: #ffffff;
+        }
+
+        .tg-btn-primary:hover {
+            background: #1e6fb5;
+        }
+
+        .tg-btn-primary:active {
+            background: #1a5f9a;
+        }
+
+        /* ----- Кнопка с иконкой + текст (как в меню) ----- */
+        .tg-btn-icon {
+            justify-content: flex-start;
+            padding: 14px 18px;
+        }
+
+        .tg-btn-icon i {
+            width: 24px;
+            text-align: center;
+            color: #2481cc;
+        }
+
+        /* ----- Группа кнопок (как в меню) ----- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0 10px;
+        }
+
+        /* ----- Строка с двумя кнопками (как внизу чата) ----- */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .btn-row .tg-btn {
+            flex: 1;
+        }
+
+        /* ----- Кнопка-переключатель (как в настройках) ----- */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f0f2f4;
+            border-radius: 14px;
+            padding: 10px 16px;
+            margin: 20px 0 12px;
+        }
+
+        .toggle-wrapper span {
+            font-size: 16px;
+            font-weight: 450;
+            color: #1c1c1e;
+        }
+
+        .toggle {
+            width: 48px;
+            height: 28px;
+            background: #b5b9be;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle.active {
+            background: #2481cc;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .toggle.active::after {
+            transform: translateX(20px);
+        }
+
+        /* ----- Стиль ссылок (как в ТГ) ----- */
+        .tg-link {
+            color: #2481cc;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .tg-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ----- Поле ввода (как в чате) ----- */
+        .tg-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #f0f2f4;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            color: #1c1c1e;
+            outline: none;
+            transition: background 0.15s;
+            margin: 12px 0 6px;
+        }
+
+        .tg-input::placeholder {
+            color: #7d7d7f;
+        }
+
+        .tg-input:focus {
+            background: #e4e7ea;
+        }
+
+        /* ----- Бейдж / чип (как количество) ----- */
+        .badge {
+            background: #2481cc;
+            color: #ffffff;
+            border-radius: 30px;
+            padding: 2px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        /* ----- Доп. мелочи ----- */
+        .divider {
+            height: 1px;
+            background: #e8ebee;
+            margin: 18px 0;
+        }
+
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mt-8 { margin-top: 8px; }
+        .mt-4 { margin-top: 4px; }
+        .mb-4 { margin-bottom: 4px; }
+        .text-muted { color: #7d7d7f; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <!-- Шапка -->
+    <div class="header">
+        <h1><i class="fas fa-paper-plane" style="color: #2481cc; margin-right: 6px;"></i>Telegram</h1>
+        <i class="fas fa-ellipsis-h"></i>
+    </div>
+
+    <!-- Поле ввода (как в чате) -->
+    <input class="tg-input" type="text" placeholder="Сообщение..." value="Привет! Это Telegram style" />
+
+    <!-- Кнопка основная (синяя) -->
+    <button class="tg-btn tg-btn-primary" style="margin-top: 8px;">
+        <i class="fas fa-paper-plane"></i> Отправить
+    </button>
+
+    <!-- Группа кнопок (меню) -->
+    <div class="btn-group">
+        <button class="tg-btn tg-btn-icon">
+            <i class="fas fa-user"></i> Профиль
+            <span style="margin-left: auto; background: #2481cc; color: white; border-radius: 30px; padding: 0 12px; font-size: 14px;">3</span>
+        </button>
+        <button class="tg-btn tg-btn-icon">
+            <i class="fas fa-cog"></i> Настройки
+        </button>
+        <button class="tg-btn tg-btn-icon">
+            <i class="fas fa-info-circle"></i> О приложении
+        </button>
+    </div>
+
+    <!-- Ряд из двух кнопок (как внизу) -->
+    <div class="btn-row">
+        <button class="tg-btn"><i class="fas fa-phone"></i> Звонок</button>
+        <button class="tg-btn"><i class="fas fa-video"></i> Видео</button>
+    </div>
+
+    <!-- Переключатель (как в настройках) -->
+    <div class="toggle-wrapper">
+        <span><i class="fas fa-moon" style="margin-right: 8px; color: #4b4b4d;"></i>Ночной режим</span>
+        <div class="toggle" id="toggleTheme" onclick="this.classList.toggle('active')"></div>
+    </div>
+
+    <!-- Ссылка и бейдж -->
+    <div class="flex-between mt-4">
+        <a href="#" class="tg-link"><i class="fas fa-external-link-alt" style="margin-right: 6px;"></i>telegram.org</a>
+        <span class="badge">v4.7</span>
+    </div>
+
+    <!-- Разделитель -->
+    <div class="divider"></div>
+
+    <!-- Строка с иконкой и текстом -->
+    <div style="display: flex; align-items: center; gap: 14px;">
+        <i class="fas fa-check-circle" style="color: #2481cc; font-size: 20px;"></i>
+        <div>
+            <div style="font-weight: 500; font-size: 15px;">Подтверждено</div>
+            <div class="text-muted" style="font-size: 13px;">Ваш аккаунт защищён</div>
+        </div>
+    </div>
+
+    <!-- Дополнительная кнопка с иконкой справа -->
+    <button class="tg-btn" style="margin-top: 16px; justify-content: space-between;">
+        <span><i class="fas fa-share-alt" style="margin-right: 10px;"></i>Поделиться</span>
+        <i class="fas fa-chevron-right" style="font-size: 14px; opacity: 0.5;"></i>
+    </button>
+
+    <!-- Маленькая заметка (как "введите сообщение") -->
+    <div class="text-muted" style="text-align: center; margin-top: 24px; font-size: 13px;">
+        <i class="fas fa-lock" style="margin-right: 4px;"></i> Сообщения зашифрованы
+    </div>
+
+</div>
+
+<!-- Скрипт для демонстрации клика (переключатель) -->
+<script>
+    // Дополнительно: чтобы переключатель работал и по клику на всю строку
+    document.querySelector('.toggle-wrapper').addEventListener('click', function(e) {
+        // Игнорируем, если кликнули прямо по самому переключателю (чтобы не было двойного срабатывания)
+        if (e.target.classList.contains('toggle')) return;
+        const toggle = this.querySelector('.toggle');
+        toggle.classList.toggle('active');
+    });
+</script>
+
+</body>
+</html>
